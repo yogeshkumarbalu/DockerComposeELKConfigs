@@ -32,7 +32,6 @@ services:
         depends_on:
             - ab-elasticsearch
 
-
 volumes:
     abes-pdata:
         driver: local
