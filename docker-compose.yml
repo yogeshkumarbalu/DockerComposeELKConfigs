@@ -32,6 +32,17 @@ services:
         depends_on:
             - ab-elasticsearch
 
+    ab-logstash:
+        container_name: ab-logstash
+        image: docker.elastic.co/logstash/logstash:7.7.0
+        restart: always
+        ports:
+            - 9600:9600
+            - 8089:8089
+        volumes:
+            - .\logstash:/usr/share/logstash/data
+        depends_on:
+            - ab-elasticsearch
 
 volumes:
     abes-pdata:
