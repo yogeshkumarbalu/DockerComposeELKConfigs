@@ -94,6 +94,9 @@
   
   - name: install python for functional and integration tests
     command: yum install -y python
+  
+  - name: install python for functional and integration tests
+    command: yum install -y pip
 
   - name: install elasticsearch python library
     command: pip install elasticsearch
