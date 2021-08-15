@@ -59,6 +59,4 @@
   handlers:
   - name: doPROD
     command: echo "asdasd"
-    debug:
-      msg: "asdsdfgsdf"
 
