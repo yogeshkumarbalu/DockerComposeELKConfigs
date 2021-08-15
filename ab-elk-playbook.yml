@@ -28,8 +28,3 @@
       sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
       sudo chmod +x /usr/local/bin/docker-compose
       ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-
-  - name: Run containers from docker-compose file from jenkins build
-    shell:
-      cmd: "docker-compose -f docker-compose.yml up -d"
-      chdir: /opt/dockerfiles
