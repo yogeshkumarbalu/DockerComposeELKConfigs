@@ -1,7 +1,6 @@
 ---
 - name: run docker-compose on localhost
   hosts: all
-  remote_user: root
   become: true
 
   tasks:
