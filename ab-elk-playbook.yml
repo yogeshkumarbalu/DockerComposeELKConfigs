@@ -1,0 +1,35 @@
+---
+- name: run docker-compose on localhost
+  hosts: all
+  remote_user: root
+  become: true
+
+  tasks:
+  - name: stop current running Running containers
+    command: docker stop $(docker ps -aq)
+    ignore_errors: yes
+
+  - name: remove all docker containers
+    command: docker rm $(docker ps -aq)
+    ignore_errors: yes
+
+  - name: remove all docker images
+    command: docker rmi $(docker images -q)
+    ignore_errors: yes
+
+  - name: remove docker from the targets
+    command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
+
+  - name: install docker again
+    command: yum install -y docker
+
+  - name: install docker-compose
+    shell: |
+      sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+      sudo chmod +x /usr/local/bin/docker-compose
+      ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+  - name: Run containers from docker-compose file from jenkins build
+    shell:
+      cmd: "docker-compose -f docker-compose.yml up -d"
+      chdir: /opt/dockerfiles
