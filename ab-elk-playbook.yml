@@ -6,42 +6,42 @@
   any_errors_fatal: true
 
   tasks:
-  # - name: stop current running Running containers
-    # shell: "docker stop $(docker ps -aq)"
-    # ignore_errors: yes
+  - name: stop current running Running containers
+    shell: "docker stop $(docker ps -aq)"
+    ignore_errors: yes
 
-  # - name: remove all docker containers
-    # shell: "docker rm $(docker ps -aq)"
-    # ignore_errors: yes
+  - name: remove all docker containers
+    shell: "docker rm $(docker ps -aq)"
+    ignore_errors: yes
 
-  # - name: remove all docker images
-    # shell: "docker rmi $(docker images -q)"
-    # ignore_errors: yes
+  - name: remove all docker images
+    shell: "docker rmi $(docker images -q)"
+    ignore_errors: yes
 
-  # - name: remove docker from the targets
-    # command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
+  - name: remove docker from the targets
+    command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
 
-  # - name: install docker again
-    # command: yum install -y docker
+  - name: install docker again
+    command: yum install -y docker
 
-  # - name: install docker-compose
-    # shell: |
-      # sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
-      # sudo chmod +x /usr/local/bin/docker-compose
-      # ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-    # ignore_errors: yes
+  - name: install docker-compose
+    shell: |
+      sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+      sudo chmod +x /usr/local/bin/docker-compose
+      ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    ignore_errors: yes
 
-  # - name: start the docker service
-    # command: "service docker start"
+  - name: start the docker service
+    command: "service docker start"
   
-  # - name: install python for functional and integration tests
-    # command: yum install -y python
+  - name: install python for functional and integration tests
+    command: yum install -y python
 
-  # - name: install elasticsearch python library
-    # command: pip install elasticsearch
+  - name: install elasticsearch python library
+    command: pip install elasticsearch
 
-  # - name: Run containers from docker-compose file from jenkins build
-    # command: "docker-compose -f docker-compose.yml up -d"
+  - name: Run containers from docker-compose file from jenkins build
+    command: "docker-compose -f docker-compose.yml up -d"
   
   - name: run the functional tests written in python script
     command: python ab-elk-func-tests.py
@@ -64,42 +64,42 @@
   any_errors_fatal: true
 
   tasks:
-  # - name: stop current running Running containers
-    # shell: "docker stop $(docker ps -aq)"
-    # ignore_errors: yes
+  - name: stop current running Running containers
+    shell: "docker stop $(docker ps -aq)"
+    ignore_errors: yes
 
-  # - name: remove all docker containers
-    # shell: "docker rm $(docker ps -aq)"
-    # ignore_errors: yes
+  - name: remove all docker containers
+    shell: "docker rm $(docker ps -aq)"
+    ignore_errors: yes
 
-  # - name: remove all docker images
-    # shell: "docker rmi $(docker images -q)"
-    # ignore_errors: yes
+  - name: remove all docker images
+    shell: "docker rmi $(docker images -q)"
+    ignore_errors: yes
 
-  # - name: remove docker from the targets
-    # command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
+  - name: remove docker from the targets
+    command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
 
-  # - name: install docker again
-    # command: yum install -y docker
+  - name: install docker again
+    command: yum install -y docker
 
-  # - name: install docker-compose
-    # shell: |
-      # sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
-      # sudo chmod +x /usr/local/bin/docker-compose
-      # ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-    # ignore_errors: yes
+  - name: install docker-compose
+    shell: |
+      sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+      sudo chmod +x /usr/local/bin/docker-compose
+      ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    ignore_errors: yes
 
-  # - name: start the docker service
-    # command: "service docker start"
+  - name: start the docker service
+    command: "service docker start"
   
-  # - name: install python for functional and integration tests
-    # command: yum install -y python
+  - name: install python for functional and integration tests
+    command: yum install -y python
 
-  # - name: install elasticsearch python library
-    # command: pip install elasticsearch
+  - name: install elasticsearch python library
+    command: pip install elasticsearch
 
-  # - name: Run containers from docker-compose file from jenkins build
-    # command: "docker-compose -f docker-compose.yml up -d"
+  - name: Run containers from docker-compose file from jenkins build
+    command: "docker-compose -f docker-compose.yml up -d"
   
   - name: run the functional tests written in python script
     command: python ab-elk-func-tests.py
