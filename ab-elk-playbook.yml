@@ -53,3 +53,9 @@
     assert:
         that:
             - '"updated" in output.stdout_lines'
+    notify:
+        - doProd
+    
+    handlers:
+        - name: doProd
+          command: echo "handler started"
