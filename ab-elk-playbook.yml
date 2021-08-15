@@ -1,6 +1,7 @@
 ---
 - name: run docker-compose on localhost
   hosts: localhost
+  gather_facts: false
   become: true
 
   tasks:
@@ -44,6 +45,8 @@
   - name: run the functional tests written in python script
     command: python ab-elk-func-tests.py
     register: output
+    meta: end_play
+    
   
   - name: check if the functional tests are passed
     debug:
@@ -53,16 +56,5 @@
     assert:
         that:
             - '"updated" in output.stdout_lines'
-    notify:
-        - doPROD
-
-  handlers:
-  - name: doPROD
-    command: echo "asdasd"
-    register: handlerout
     
-  - debug: var=handlerout
-  
-  - name: lets check handler output
-    debug:
-      var: handlerout
+
