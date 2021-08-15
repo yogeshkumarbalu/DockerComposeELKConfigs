@@ -40,3 +40,8 @@
 
   - name: Run containers from docker-compose file from jenkins build
     command: "docker-compose -f docker-compose.yml up -d"
+  
+  - name: run the python script
+    script: ab-elk-func-tests.py
+    register: output
+  - debug: var=output.stdout_lines
