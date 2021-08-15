@@ -22,8 +22,9 @@ def make_functional_tests_elasticsearch():
 		# for hit in res['hits']['hits']:
 			# print("%(timestamp)s %(author)s: %(text)s" % hit["_source"])
 	
-	except:
-		print("STOP")
+	except Exception as e:
+		#print("STOP")
+		print (e)
 
 
 make_functional_tests_elasticsearch()
