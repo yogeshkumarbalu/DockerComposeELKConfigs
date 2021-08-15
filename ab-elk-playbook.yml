@@ -45,10 +45,6 @@
     command: python ab-elk-func-tests.py
     register: output
   
-  - name: check if the functional tests are passed
-    debug:
-      var: output.stdout_lines
-  
   - name: Assert if updated word is in the stdout of python test
     assert:
         that:
@@ -58,5 +54,5 @@
 
   handlers:
   - name: doPROD
-    command: echo "asdasd"
+    command: echo "asdasdxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
