@@ -35,5 +35,8 @@
   - name: install python for functional and integration tests
     command: yum install -y python
 
+  - name: install elasticsearch python library
+    command: pip install elasticsearch
+
   - name: Run containers from docker-compose file from jenkins build
     command: "docker-compose -f docker-compose.yml up -d"
