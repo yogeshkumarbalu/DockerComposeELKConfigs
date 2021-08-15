@@ -1,49 +1,30 @@
-version: '3.7'
+version: '3.3'
 services:
-    ab-elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
-        container_name: ab-elasticsearch
-        restart: always
-        environment:
-            - xpack.security.enabled=false
-            - discovery.type=single-node
-        ulimits:
-            memlock:
-                soft: -1
-                hard: -1
-            nofile:
-                soft: 65536
-                hard: 65536
-        cap_add:
-            - IPC_LOCK
-        volumes:
-            - abes-pdata:/usr/share/elasticsearch/data
-        ports:
-            - 9200:9200
-
-    ab-kibana:
-        container_name: ab-kibana
-        image: docker.elastic.co/kibana/kibana:7.14.0
-        restart: always
-        environment:
-            - ELASTICSEARCH_HOSTS=http://ab-elasticsearch:9200
-        ports:
-            - 5601:5601
-        depends_on:
-            - ab-elasticsearch
-
-    ab-logstash:
-        container_name: ab-logstash
-        image: docker.elastic.co/logstash/logstash:7.7.0
-        restart: always
-        ports:
-            - 9600:9600
-            - 8089:8089
-        volumes:
-            - .\logstash:/usr/share/logstash/data
-        depends_on:
-            - ab-elasticsearch
-
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    
+  wordpress:
+    depends_on:
+      - db
+    image: wordpress:latest
+    volumes:
+      - wordpress_data:/var/www/html
+    ports:
+      - "8000:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
 volumes:
-    abes-pdata:
-        driver: local
+  db_data: {}
+  wordpress_data: {}
