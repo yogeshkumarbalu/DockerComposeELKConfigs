@@ -1,11 +1,111 @@
 ---
 - name: run docker-compose on localhost
+  hosts: localhost
+  gather_facts: false
+  become: true
+  any_errors_fatal: true
+
+  tasks:
+  - name: stop current running Running containers
+    shell: "docker stop $(docker ps -aq)"
+    ignore_errors: yes
+
+  - name: remove all docker containers
+    shell: "docker rm $(docker ps -aq)"
+    ignore_errors: yes
+
+  - name: remove all docker images
+    shell: "docker rmi $(docker images -q)"
+    ignore_errors: yes
+
+  - name: remove docker from the targets
+    command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
+
+  - name: install docker again
+    command: yum install -y docker
+
+  - name: install docker-compose
+    shell: |
+      sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
+      sudo chmod +x /usr/local/bin/docker-compose
+      ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+    ignore_errors: yes
+
+  - name: start the docker service
+    command: "service docker start"
+  
+  - name: install python for functional and integration tests
+    command: yum install -y python
+
+  - name: install elasticsearch python library
+    command: pip install elasticsearch
+
+  - name: Run containers from docker-compose file from jenkins build
+    command: "docker-compose -f docker-compose.yml up -d"
+  
+  - name: run the functional tests written in python script
+    command: python ab-elk-func-tests.py
+    register: output
+
+  - name: check if the functional tests are passed
+    debug:
+      var: output.stdout
+  
+  - name: Assert if updated word is in the stdout of python test
+    assert:
+        that:
+            - '"updated" in output.stdout_lines'
+
+
+- name: run docker-compose on prod
   hosts: 172.31.8.171
   gather_facts: false
   become: true
   any_errors_fatal: true
 
   tasks:
-  - name: copy config files from ansible node to target node
-    run_once: yes
-    copy: src=/home/ansiadmin/docker-compose.yml dest=/home/ansiadmin/ flat=yes
+  - name: stop current running Running containers
+    shell: "docker stop $(docker ps -aq)"
+    ignore_errors: yes
+
+  - name: remove all docker containers
+    shell: "docker rm $(docker ps -aq)"
+    ignore_errors: yes
+
+  - name: remove all docker images
+    shell: "docker rmi $(docker images -q)"
+    ignore_errors: yes
+
+  - name: remove docker from the targets
+    command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
+
+  - name: install docker again
+    command: yum install -y docker
+
+  - name: start the docker service
+    command: "service docker start"
+  
+  - name: install python for functional and integration tests
+    command: yum install -y python
+  
+  - name: install python for functional and integration tests
+    command: yum install -y pip
+
+  - name: install elasticsearch python library
+    command: pip install elasticsearch
+
+  - name: Run containers from docker-compose file from jenkins build
+    command: "docker-compose -f docker-compose.yml up -d"
+  
+  - name: run the functional tests written in python script
+    command: python ab-elk-func-tests.py
+    register: output
+
+  - name: check if the functional tests are passed
+    debug:
+      var: output.stdout
+  
+  - name: Assert if updated word is in the stdout of python test
+    assert:
+        that:
+            - '"xxx" in output.stdout_lines'
