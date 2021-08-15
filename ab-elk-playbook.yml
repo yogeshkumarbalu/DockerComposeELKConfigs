@@ -9,4 +9,3 @@
   - name: copy config files from ansible node to target node
     run_once: yes
     copy: src=/home/ansiadmin/docker-compose.yml dest=/home/ansiadmin/ flat=yes
-    when: "{{ inventory_hostname == 'localhost' }}" 
