@@ -42,4 +42,5 @@
     # command: "docker-compose -f docker-compose.yml up -d"
   
   - name: run the python script
-    ansible.builtin.script: ab-elk-func-tests.py
+    command: python ab-elk-func-tests.py
+    
