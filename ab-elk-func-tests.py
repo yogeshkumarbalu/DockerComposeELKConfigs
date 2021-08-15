@@ -1,7 +1,7 @@
 from datetime import datetime
 from elasticsearch import Elasticsearch
 
-def make_functional_tests_elasticsearch():
+
 	try:
 		es = Elasticsearch()
 		doc = {
@@ -27,4 +27,4 @@ def make_functional_tests_elasticsearch():
 		print (e)
 
 
-make_functional_tests_elasticsearch()
+
