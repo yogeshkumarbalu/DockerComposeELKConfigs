@@ -43,4 +43,7 @@
   
   - name: run the python script
     command: python ab-elk-func-tests.py
-    
+    register: output
+  
+  - name: printintpython output
+    debug: var: output
