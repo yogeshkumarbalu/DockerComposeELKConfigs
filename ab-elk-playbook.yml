@@ -45,9 +45,7 @@
   - name: run the functional tests written in python script
     command: python ab-elk-func-tests.py
     register: output
-    meta: end_play
-    
-  
+
   - name: check if the functional tests are passed
     debug:
       var: output
@@ -56,3 +54,5 @@
     assert:
         that:
             - '"updated" in output.stdout_lines'
+    
+
