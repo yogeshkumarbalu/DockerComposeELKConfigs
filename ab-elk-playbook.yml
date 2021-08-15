@@ -4,23 +4,16 @@
   become: true
 
   tasks:
-  - name: Get running containers
-    docker_host_info:
-      containers: yes
-    register: docker_info
-
-  - name: Stop running containers
-    docker_container:
-      name: "{{ item }}"
-      state: stopped
-    loop: "{{ docker_info.containers | map(attribute='Id') | list }}"
+  - name: stop current running Running containers
+    shell: "docker stop $(docker ps -aq)"
+    ignore_errors: yes
 
   - name: remove all docker containers
-    command: docker rm $(docker ps -aq)
+    shell: "docker rm $(docker ps -aq)"
     ignore_errors: yes
 
   - name: remove all docker images
-    command: docker rmi $(docker images -q)
+    shell: "docker rmi $(docker images -q)"
     ignore_errors: yes
 
   - name: remove docker from the targets
