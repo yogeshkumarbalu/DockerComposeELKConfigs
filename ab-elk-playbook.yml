@@ -43,5 +43,3 @@
   
   - name: run the python script
     ansible.builtin.script: ab-elk-func-tests.py
-    register: output
-  - debug: var=output.stdout_lines
