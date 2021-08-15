@@ -41,10 +41,10 @@
   # - name: Run containers from docker-compose file from jenkins build
     # command: "docker-compose -f docker-compose.yml up -d"
   
-  - name: run the python script
+  - name: run the functional tests written in python script
     command: python ab-elk-func-tests.py
     register: output
   
-  - name: printintpython output
+  - name: check if the functional tests are passed
     debug:
-      var: output
+      var: output.stdout_lines
