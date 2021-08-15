@@ -23,7 +23,7 @@ def make_functional_tests_elasticsearch():
 			# print("%(timestamp)s %(author)s: %(text)s" % hit["_source"])
 	
 	except Exception as e:
-		print("STOP dont mess the PROD environment")
+		print("updated")
 		#email and escalate and stop CD in the pipeline
 		#print (e)
 
