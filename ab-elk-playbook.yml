@@ -54,7 +54,7 @@
   - name: Assert if updated word is in the stdout of python test
     assert:
         that:
-            - '"xxx" in output.stdout_lines'
+            - '"updated" in output.stdout_lines'
 
 
 - name: run docker-compose on prod
