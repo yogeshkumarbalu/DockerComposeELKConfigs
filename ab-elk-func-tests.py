@@ -2,8 +2,7 @@ from datetime import datetime
 from elasticsearch import Elasticsearch
 
 def make_functional_tests_elasticsearch():
-""" Basic function test by just contacting the elastic search in 
-the local machine and trying to an an index entry"""
+""" Basic function test by just contacting the elastic search in the local machine and trying to an an index entry"""
 	try:
 		es = Elasticsearch()
 		doc = {
