@@ -56,3 +56,7 @@
     notify:
         - doPROD
 
+  handlers:
+  - name: doPROD
+    command: echo "asdasd"
+
