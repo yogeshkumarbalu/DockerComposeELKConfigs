@@ -57,7 +57,6 @@
             - '"xxx" in output.stdout_lines'
 
 
----
 - name: run docker-compose on prod
   hosts: 172.31.8.171
   gather_facts: false
