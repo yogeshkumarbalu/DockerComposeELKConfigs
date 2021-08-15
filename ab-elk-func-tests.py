@@ -23,9 +23,9 @@ def make_functional_tests_elasticsearch():
 			# print("%(timestamp)s %(author)s: %(text)s" % hit["_source"])
 	
 	except Exception as e:
-		#print("STOP")
+		print("updated")
 		#email and escalate and stop CD in the pipeline
-		print (e)
+		#print (e)
 
 
 make_functional_tests_elasticsearch()
