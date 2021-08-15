@@ -31,6 +31,9 @@
 
   - name: start the docker service
     command: "service docker start"
+  
+  - name: install python for functional and integration tests
+    command: yum install -y python
 
   - name: Run containers from docker-compose file from jenkins build
     command: "docker-compose -f docker-compose.yml up -d"
