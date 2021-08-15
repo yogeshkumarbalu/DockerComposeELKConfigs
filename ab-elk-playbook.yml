@@ -60,6 +60,8 @@
   - name: doPROD
     command: echo "asdasd"
     register: handlerout
+    
+  - debug: var=handlerout
   
   - name: lets check handler output
     debug:
