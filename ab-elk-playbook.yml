@@ -46,4 +46,5 @@
     register: output
   
   - name: printintpython output
-    debug: var: output
+    debug:
+      var: output
