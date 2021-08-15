@@ -53,3 +53,6 @@
     assert:
         that:
             - '"updated" in output.stdout_lines'
+    notify:
+        - doPROD
+
