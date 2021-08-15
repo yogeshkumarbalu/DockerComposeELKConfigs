@@ -29,5 +29,8 @@
       ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
     ignore_errors: yes
 
+  - name: start the docker service
+    command: "service docker start"
+
   - name: Run containers from docker-compose file from jenkins build
     command: "docker-compose -f docker-compose.yml up -d"
