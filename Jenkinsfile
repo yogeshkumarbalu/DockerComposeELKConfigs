@@ -15,7 +15,7 @@ pipeline {
 			steps {
 				sshPublisher(publishers: [sshPublisherDesc
 					(configName: 'AB-Ansible', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
-						execCommand: 'ansible-playbook test-play.yml', execTimeout: 0, flatten: false, 
+						execCommand: 'ansible-playbook ab-elk-ansible-playbook.yml', execTimeout: 0, flatten: false, 
 						makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', 
 						remoteDirectory: '.', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '*.yml, *.py')], 
 					usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
