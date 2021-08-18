@@ -1,0 +1,10 @@
+---
+- name: run docker-compose on localhost
+  hosts: localhost
+  gather_facts: false
+  become: true
+  any_errors_fatal: true
+
+  tasks:
+  - name: run the python script
+    command: python ab-elk-func-tests.py --es_address localhost --indices 4 --documents 5 --seconds 120 --not-green --clients 5
