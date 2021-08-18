@@ -53,7 +53,7 @@
   - name: Assert if updated word is in the stdout of python test
     assert:
         that:
-            - '"updated" in output.stdout_lines'
+            - '"Done!" in output.stdout_lines'
 
 
 - name: run docker-compose on prod
@@ -113,4 +113,4 @@
   - name: Assert if updated word is in the stdout of python test
     assert:
         that:
-            - '"updated" in output.stdout_lines'
+            - '"Done!" in output.stdout_lines'
