@@ -10,6 +10,7 @@ pipeline {
 						usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
 			}
 		}
+		
 
 		stage("Copy the python test scripts and docker compose file to Ansible server and execute the playbook") {
 			steps {
