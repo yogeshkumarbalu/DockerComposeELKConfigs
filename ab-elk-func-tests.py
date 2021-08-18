@@ -31,6 +31,7 @@ parser.add_argument("--bulk-size", type=int, default=1000, help="Number of docum
 parser.add_argument("--max-fields-per-document", type=int, default=100,
                     help="Max number of fields in each document (default 100)")
 parser.add_argument("--max-size-per-field", type=int, default=1000, help="Max content size per field (default 1000")
+parser.add_argument("--no-cleanup", default=False, action='store_true', help="Don't delete the indices upon finish")
 parser.add_argument("--stats-frequency", type=int, default=30,
                     help="Number of seconds to wait between stats prints (default 30)")
 parser.add_argument("--not-green", dest="green", action="store_false", help="Script doesn't wait for the cluster to be green")
@@ -47,6 +48,7 @@ NUMBER_OF_REPLICAS = args.number_of_replicas
 BULK_SIZE = args.bulk_size
 MAX_FIELDS_PER_DOCUMENT = args.max_fields_per_document
 MAX_SIZE_PER_FIELD = args.max_size_per_field
+NO_CLEANUP = args.no_cleanup
 STATS_FREQUENCY = args.stats_frequency
 WAIT_FOR_GREEN = args.green
 
@@ -311,10 +313,6 @@ def main():
         print("")
         print("Starting initialization of {0}".format(esaddress))
         try:
-            # Initiate the elasticsearch session
-            # We increase the timeout here from the default value (10 seconds)
-            # to ensure we wait for requests to finish even if the cluster is overwhelmed
-            # and it takes a bit longer to process one bulk.
             es = Elasticsearch(
                 esaddress,
                 http_auth=auth,
@@ -393,17 +391,20 @@ def main():
     print("\nTest is done! Final results:")
     print_stats(STARTED_TIMESTAMP)
 
-    print("Cleaning up created indices.. "),
+    # Cleanup, unless we are told not to
+    if not NO_CLEANUP:
+        print("Cleaning up created indices.. "),
 
-    cleanup_indices(es, all_indices)
+        cleanup_indices(es, all_indices)
 
-    print("Done!")  # # Main runner
+        print("LOADTEST-DONE")
 
 try:
     main()
 
 except Exception as e:
+    print("")
+    print(e.message)
     print("error")
-    #print(e.message)
 
     sys.exit(1)
