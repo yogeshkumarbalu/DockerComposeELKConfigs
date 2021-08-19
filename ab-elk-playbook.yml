@@ -17,29 +17,29 @@
     ignore_errors: yes
 
   - name: remove all docker images
-	shell: "docker rmi $(docker images -q)"
+    shell: "docker rmi $(docker images -q)"
     ignore_errors: yes
 
   - name: remove docker from the targets
-	command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
+    command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
 
   - name: install docker again
-	command: yum install -y docker
+    command: yum install -y docker
 
   - name: start the docker service
-	command: "service docker start"
+    command: "service docker start"
 
   - name: Force a failure
 	command: /bin/false
   
   - name: Install docker-compose
-	get_url:
-	  url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
-	  dest: /usr/local/bin/docker-compose
-	  mode: 'u+x,g+x'
+    get_url:
+      url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+      dest: /usr/local/bin/docker-compose
+      mode: 'u+x,g+x'
   
   - name: install python for functional and integration tests
-	command: yum install -y python
+    command: yum install -y python
 
   - name: install elasticsearch python library
 	command: pip install elasticsearch
