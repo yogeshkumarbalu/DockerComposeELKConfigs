@@ -5,59 +5,65 @@
   become: true
   any_errors_fatal: true
   
-  block:
-  - name: stop current running Running containers
-    shell: "docker stop $(docker ps -aq)"
-    ignore_errors: yes
+  tasks:
+  - name: block run docker compose on localhost
+    block:
+	  - name: stop current running Running containers
+		shell: "docker stop $(docker ps -aq)"
+		ignore_errors: yes
 
-  - name: remove all docker containers
-    shell: "docker rm $(docker ps -aq)"
-    ignore_errors: yes
+	  - name: remove all docker containers
+		shell: "docker rm $(docker ps -aq)"
+		ignore_errors: yes
 
-  - name: remove all docker images
-    shell: "docker rmi $(docker images -q)"
-    ignore_errors: yes
+	  - name: remove all docker images
+		shell: "docker rmi $(docker images -q)"
+		ignore_errors: yes
 
-  - name: remove docker from the targets
-    command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
+	  - name: remove docker from the targets
+		command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
 
-  - name: install docker again
-    command: yum install -y docker
+	  - name: install docker again
+		command: yum install -y docker
 
-  - name: start the docker service
-    command: "service docker start"
+	  - name: start the docker service
+		command: "service docker start"
   
-  - name: Force a failure
-    command: /bin/false
+	  - name: Force a failure
+		command: /bin/false
   
-  - name: Install docker-compose
-    get_url:
-      url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
-      dest: /usr/local/bin/docker-compose
-      mode: 'u+x,g+x'
+	  - name: Install docker-compose
+		get_url:
+		  url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+		  dest: /usr/local/bin/docker-compose
+		  mode: 'u+x,g+x'
   
-  - name: install python for functional and integration tests
-    command: yum install -y python
+	  - name: install python for functional and integration tests
+		command: yum install -y python
 
-  - name: install elasticsearch python library
-    command: pip install elasticsearch
+	  - name: install elasticsearch python library
+		command: pip install elasticsearch
 
-  - name: Run containers from docker-compose file from jenkins build
-    command: "docker-compose -f docker-compose.yml up -d"
+	  - name: Run containers from docker-compose file from jenkins build
+		command: "docker-compose -f docker-compose.yml up -d"
   
-  - name: run the functional tests written in python script
-    command: python ab-elk-func-tests.py
-    register: output
+	  - name: run the functional tests written in python script
+		command: python ab-elk-func-tests.py
+		register: output
 
-  - name: check if the functional tests are passed
-    debug:
-      var: output.stdout
+	  - name: check if the functional tests are passed
+		debug:
+		  var: output.stdout
   
-  - name: Assert if updated word is in the stdout of python test
-    assert:
-        that:
-            - '"Done!" in output.stdout_lines'
+	  - name: Assert if updated word is in the stdout of python test
+		assert:
+			that:
+				- '"Done!" in output.stdout_lines'
 
+	rescue:
+	- name: mail to systems
+	  debug:
+	    msg: "mailing to systemss for failed tasks"
 
 - name: run docker-compose on prod
   hosts: 172.31.8.171
