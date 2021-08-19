@@ -2,6 +2,7 @@
 - name: run docker-compose on localhost
   hosts: localhost
   gather_facts: false
+  become: true
   any_errors_fatal: true
   
   tasks:
@@ -68,6 +69,7 @@
 - name: run docker-compose on prod
   hosts: 172.31.8.171
   gather_facts: false
+  become: true
   any_errors_fatal: true
 
   tasks:
