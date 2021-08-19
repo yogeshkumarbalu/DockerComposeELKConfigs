@@ -66,7 +66,7 @@
       debug:
         msg: "mailing to systemss for failed tasks"
     - name: end the play
-	  meta: end_play
+      meta: end_play
 
 - name: run docker-compose on prod
   hosts: 172.31.8.171
