@@ -7,6 +7,7 @@
   
   tasks:
   - name: block run docker compose on localhost
+    any_errors_fatal: true
     block:
     - name: stop current running Running containers
       shell: "docker stop $(docker ps -aq)"
@@ -62,7 +63,6 @@
 
     rescue:
     - name: mail to systems
-      any_errors_fatal: true
       debug:
         msg: "mailing to systemss for failed tasks"
 
