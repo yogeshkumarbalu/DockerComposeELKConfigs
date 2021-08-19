@@ -62,7 +62,7 @@
 
     rescue:
     - name: mail to systems
-	  any_errors_fatal: true
+      any_errors_fatal: true
       debug:
         msg: "mailing to systemss for failed tasks"
 
