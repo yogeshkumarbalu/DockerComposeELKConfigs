@@ -9,16 +9,16 @@
   - name: block run docker compose on localhost
   block:
   - name: stop current running Running containers
-	shell: "docker stop $(docker ps -aq)"
-	ignore_errors: yes
+    shell: "docker stop $(docker ps -aq)"
+    ignore_errors: yes
 
   - name: remove all docker containers
     shell: "docker rm $(docker ps -aq)"
-	ignore_errors: yes
+    ignore_errors: yes
 
   - name: remove all docker images
 	shell: "docker rmi $(docker images -q)"
-	ignore_errors: yes
+    ignore_errors: yes
 
   - name: remove docker from the targets
 	command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
