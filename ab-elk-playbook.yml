@@ -4,8 +4,8 @@
   gather_facts: false
   become: true
   any_errors_fatal: true
-
-  tasks:
+  
+  block:
   - name: stop current running Running containers
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
@@ -26,6 +26,9 @@
 
   - name: start the docker service
     command: "service docker start"
+  
+  - name: Force a failure
+    command: /bin/false
   
   - name: Install docker-compose
     get_url:
@@ -55,6 +58,11 @@
         that:
             - '"Done!" in output.stdout_lines'
 
+  rescue:
+  - name: Mail to the systems
+    debug:
+      msg: "mailing on fails"
+
 
 - name: run docker-compose on prod
   hosts: 172.31.8.171
@@ -83,6 +91,9 @@
 
   - name: start the docker service
     command: "service docker start"
+
+  - name: Force a failure
+    command: /bin/false
 
   - name: Install docker-compose
     get_url:
