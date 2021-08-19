@@ -5,7 +5,7 @@
   become: true
   any_errors_fatal: true
   
-  tasks:
+  block:
   - name: stop current running Running containers
     shell: "docker stop $(docker ps -aq)"
     ignore_errors: yes
