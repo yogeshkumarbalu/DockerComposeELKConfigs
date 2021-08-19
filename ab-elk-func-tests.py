@@ -397,7 +397,7 @@ def main():
 
         cleanup_indices(es, all_indices)
 
-        print("LOADTEST-DONE")
+        print("LOADTEST-DONE") #handler for Ansible assert statement
 
 try:
     main()
@@ -406,5 +406,5 @@ except Exception as e:
     print("")
     print(e.message)
     print("error")
-
+    print("Ab-Task-Mail to systems informing tests failed")
     sys.exit(1)
