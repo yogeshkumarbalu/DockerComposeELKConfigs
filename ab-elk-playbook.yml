@@ -63,6 +63,7 @@
 
     - name: Run containers from docker-compose file from jenkins build
       command: docker-compose -f docker-compose.yml up -d
+      become: true
   
     - name: run the functional tests written in python script
       command: python3 ab-tests.py  --es_address localhost --indices 4 --documents 5 --seconds 120 --not-green --clients 5
