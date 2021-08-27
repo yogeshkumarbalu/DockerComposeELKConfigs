@@ -4,8 +4,6 @@
   become: true
 
   tasks:
-  - name: block for ELK Stack and this block is rescued with mail notification
-    block:
     - name: stop current running containers
       shell: "docker stop $(docker ps -aq)"
       ignore_errors: yes
@@ -68,10 +66,3 @@
       command: python3 ab-tests.py  --es_address localhost --indices 4 --documents 5 --seconds 120 --not-green --clients 5
       register: output
       failed_when: '"errorELK" in output.stdout'
-
-    rescue:
-    - name: when any of tasks fail, mail notification
-      debug:
-        msg: "notifying the users for failed tasks"
-    - name: end the play
-      meta: end_play
