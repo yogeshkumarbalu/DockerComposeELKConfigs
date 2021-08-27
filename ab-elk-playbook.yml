@@ -60,11 +60,6 @@
       pip:
         name: elasticsearch
       when: inventory_hostname == 'localhost'
-    
-    - name: install python library for docker-compose with ansible
-      pip:
-        name: docker
-      when: inventory_hostname == 'localhost'
 
     - name: Run containers from docker-compose file from jenkins build
       shell: "docker-compose -f docker-compose.yml up -d"
