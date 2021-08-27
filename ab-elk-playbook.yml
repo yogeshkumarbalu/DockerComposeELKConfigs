@@ -59,6 +59,7 @@
     - name: install elasticsearch python library
       pip:
         name: elasticsearch
+        executable: pip3
       when: inventory_hostname == 'localhost'
 
     - name: Run containers from docker-compose file from jenkins build
