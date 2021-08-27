@@ -59,7 +59,6 @@
     - name: install elasticsearch python library
       pip:
         name: elasticsearch
-      when: ansible_hostname == 'localhost'
 
     - name: Run containers from docker-compose file from jenkins build
       command: "docker-compose -f docker-compose.yml up -d"
