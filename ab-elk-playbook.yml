@@ -1,15 +1,12 @@
 ---
 - name: run docker-compose on localhost
-  hosts: localhost
-  gather_facts: false
+  hosts: all
   become: true
-  any_errors_fatal: true
-  
+
   tasks:
-  - name: block run docker compose on localhost
-    any_errors_fatal: true
+  - name: block for ELK Stack and this block is rescued with mail notification
     block:
-    - name: stop current running Running containers
+    - name: stop current running containers
       shell: "docker stop $(docker ps -aq)"
       ignore_errors: yes
 
@@ -20,112 +17,60 @@
     - name: remove all docker images
       shell: "docker rmi $(docker images -q)"
       ignore_errors: yes
+  
+    - name: stop the docker service
+      service:
+        name: docker
+        state: stopped
 
-    - name: remove docker from the targets
-      command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
+    - name: remove the docker packages
+      yum:
+       name: "{{ packages }}"
+       state: absent
+      vars:
+        packages: 
+        - docker
+        - docker-client
+        - docker-client-latest
+        - docker-common
+        - docker-latest
+        - docker-engine
 
     - name: install docker again
-      command: yum install -y docker
-
-    - name: start the docker service
-      command: "service docker start"
-
-    - name: Force a failure
-      command: /bin/false
+      yum:
+       name: "{{ packages }}"
+       state: latest
+       enablerepo: "amzn2extra-docker"
+      vars:
+        packages: 
+        - docker
   
+    - name: start the docker service
+      service:
+        name: docker
+        state: started
+
     - name: Install docker-compose
       get_url:
         url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
         dest: /usr/local/bin/docker-compose
         mode: 'u+x,g+x'
-  
-    - name: install python for functional and integration tests
-      command: yum install -y python
 
     - name: install elasticsearch python library
-      command: pip install elasticsearch
+      pip:
+        name: elasticsearch
 
     - name: Run containers from docker-compose file from jenkins build
       command: "docker-compose -f docker-compose.yml up -d"
   
     - name: run the functional tests written in python script
-      command: python ab-elk-func-tests.py
+      command: python3 ab-tests.py  --es_address localhost --indices 4 --documents 5 --seconds 120 --not-green --clients 5
       register: output
-
-    - name: check if the functional tests are passed
-      debug:
-        var: output.stdout
-  
-    - name: Assert if updated word is in the stdout of python test
-      assert:
-        that:
-           - '"Done!" in output.stdout_lines'
+      failed_when: '"errorELK" in output.stdout'
 
     rescue:
-    - name: mail to systems
+    - name: when any of tasks fail, mail notification
       debug:
-        msg: "mailing to systemss for failed tasks"
+        msg: "notifying the users for failed tasks"
     - name: end the play
       meta: end_play
-
-- name: run docker-compose on prod
-  hosts: 172.31.8.171
-  gather_facts: false
-  become: true
-  any_errors_fatal: true
-
-  tasks:
-  - name: stop current running Running containers
-    shell: "docker stop $(docker ps -aq)"
-    ignore_errors: yes
-
-  - name: remove all docker containers
-    shell: "docker rm $(docker ps -aq)"
-    ignore_errors: yes
-
-  - name: remove all docker images
-    shell: "docker rmi $(docker images -q)"
-    ignore_errors: yes
-
-  - name: remove docker from the targets
-    command: yum remove -y docker docker-common docker-selinux docker-engine docker-ce docker-ce-cli
-
-  - name: install docker again
-    command: yum install -y docker
-
-  - name: start the docker service
-    command: "service docker start"
-
-  - name: Force a failure
-    command: /bin/false
-
-  - name: Install docker-compose
-    get_url:
-      url : https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
-      dest: /usr/local/bin/docker-compose
-      mode: 'u+x,g+x'
-
-  - name: install python for functional and integration tests
-    command: yum install -y python
-  
-  - name: install python for functional and integration tests
-    command: yum install -y pip
-
-  - name: install elasticsearch python library
-    command: pip install elasticsearch
-
-  - name: Run containers from docker-compose file from jenkins build
-    command: "docker-compose -f docker-compose.yml up -d"
-  
-  - name: run the functional tests written in python script
-    command: python ab-elk-func-tests.py
-    register: output
-
-  - name: check if the functional tests are passed
-    debug:
-      var: output.stdout
-  
-  - name: Assert if updated word is in the stdout of python test
-    assert:
-        that:
-            - '"Done!" in output.stdout_lines'
