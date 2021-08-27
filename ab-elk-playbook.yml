@@ -64,7 +64,7 @@
     
     - name: install python library for docker-compose with ansible
       pip:
-        name: docker-py
+        name: docker
         executable: pip3
       when: inventory_hostname == 'localhost'
 
