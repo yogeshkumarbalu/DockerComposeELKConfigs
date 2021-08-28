@@ -13,8 +13,8 @@ try:
     from elasticsearch import Elasticsearch
     from elasticsearch.connection import create_ssl_context
 except:
-    print("Could not import elasticsearch..")
-    print("Try: pip install elasticsearch")
+    print("errorELK")
+    print ("failure handling mechanisms - ticket, mail etc")
     sys.exit(1)
 import urllib3
 urllib3.disable_warnings()
@@ -25,33 +25,12 @@ parser.add_argument("--indices", type=int, help="The number of indices to write 
 parser.add_argument("--documents", type=int, help="The number different documents to write for each ip", required=True)
 parser.add_argument("--clients", type=int, help="The number of clients to write from for each ip", required=True)
 parser.add_argument("--seconds", type=int, help="The number of seconds to run for each ip", required=True)
-parser.add_argument("--number-of-shards", type=int, default=3, help="Number of shards per index (default 3)")
-parser.add_argument("--number-of-replicas", type=int, default=1, help="Number of replicas per index (default 1)")
-parser.add_argument("--bulk-size", type=int, default=1000, help="Number of document per request (default 1000)")
-parser.add_argument("--max-fields-per-document", type=int, default=100,
-                    help="Max number of fields in each document (default 100)")
-parser.add_argument("--max-size-per-field", type=int, default=1000, help="Max content size per field (default 1000")
-parser.add_argument("--no-cleanup", default=False, action='store_true', help="Don't delete the indices upon finish")
-parser.add_argument("--stats-frequency", type=int, default=30,
-                    help="Number of seconds to wait between stats prints (default 30)")
-parser.add_argument("--not-green", dest="green", action="store_false", help="Script doesn't wait for the cluster to be green")
-parser.set_defaults(green=True)
 args = parser.parse_args()
 
-# Set variables from argparse output (for readability)
 NUMBER_OF_INDICES = args.indices
 NUMBER_OF_DOCUMENTS = args.documents
 NUMBER_OF_CLIENTS = args.clients
 NUMBER_OF_SECONDS = args.seconds
-NUMBER_OF_SHARDS = args.number_of_shards
-NUMBER_OF_REPLICAS = args.number_of_replicas
-BULK_SIZE = args.bulk_size
-MAX_FIELDS_PER_DOCUMENT = args.max_fields_per_document
-MAX_SIZE_PER_FIELD = args.max_size_per_field
-NO_CLEANUP = args.no_cleanup
-STATS_FREQUENCY = args.stats_frequency
-WAIT_FOR_GREEN = args.green
-
 
 # timestamp placeholder
 STARTED_TIMESTAMP = 0
@@ -128,6 +107,8 @@ def generate_random_int(max_size):
         return randint(1, max_size)
     except:
         print("Not supporting {0} as valid sizes!".format(max_size))
+        print("errorELK")
+        print ("failure handling mechanisms - ticket, mail etc")
         sys.exit(1)
 
 
@@ -141,9 +122,9 @@ def generate_document():
     temp_doc = {}
 
     # Iterate over the max fields
-    for _ in range(generate_random_int(MAX_FIELDS_PER_DOCUMENT)):
+    for _ in range(generate_random_int(100)):
         # Generate a field, with random content
-        temp_doc[generate_random_string(10)] = generate_random_string(MAX_SIZE_PER_FIELD)
+        temp_doc[generate_random_string(10)] = generate_random_string(1000)
 
     # Return the created document
     return temp_doc
@@ -161,7 +142,7 @@ def fill_documents(documents_templates):
 
         # Populate the fields
         for field in temp_doc:
-            temp_doc[field] = generate_random_string(MAX_SIZE_PER_FIELD)
+            temp_doc[field] = generate_random_string(1000)
 
         documents.append(temp_doc)
 
@@ -172,8 +153,7 @@ def client_worker(es, indices, STARTED_TIMESTAMP):
 
         curr_bulk = ""
 
-        # Iterate over the bulk size
-        for _ in range(BULK_SIZE):
+        for _ in range(1000):
             # Generate the bulk operation
             curr_bulk += "{0}\n".format(json.dumps({"index": {"_index": choice(indices), "_type": "stresstest"}}))
             curr_bulk += "{0}\n".format(json.dumps(choice(documents)))
@@ -237,12 +217,14 @@ def generate_indices(es):
 
         try:
             # And create it in ES with the shard count and replicas
-            es.indices.create(index=temp_index, body={"settings": {"number_of_shards": NUMBER_OF_SHARDS,
-                                                                   "number_of_replicas": NUMBER_OF_REPLICAS}})
+            es.indices.create(index=temp_index, body={"settings": {"number_of_shards": 3,
+                                                                   "number_of_replicas": 1}})
 
         except Exception as e:
             print("Could not create index. Is your cluster ok?")
             print(e)
+            print("errorELK")
+            print ("failure handling mechanisms - ticket, mail etc")
             sys.exit(1)
 
     # Return the indices
@@ -275,9 +257,6 @@ def print_stats(STARTED_TIMESTAMP):
 
     # Print stats to the user
     print("Elapsed time: {0} seconds".format(elapsed_time))
-    print("Successful bulks: {0} ({1} documents)".format(success_bulks, (success_bulks * BULK_SIZE)))
-    print("Failed bulks: {0} ({1} documents)".format(failed_bulks, (failed_bulks * BULK_SIZE)))
-    print("Indexed approximately {0} MB which is {1:.2f} MB/s".format(size_mb, mbs))
     print("")
 
 
@@ -288,11 +267,11 @@ def print_stats_worker(STARTED_TIMESTAMP):
     # Acquire it
     lock.acquire()
 
-    # Print the stats every STATS_FREQUENCY seconds
+    # Print the stats every 30 seconds
     while (not has_timeout(STARTED_TIMESTAMP)) and (not shutdown_event.is_set()):
 
         # Wait for timeout
-        lock.wait(STATS_FREQUENCY)
+        lock.wait(30)
 
         # To avoid double printing
         if not has_timeout(STARTED_TIMESTAMP):
@@ -321,6 +300,8 @@ def main():
         except Exception as e:
             print("Could not connect to elasticsearch!")
             print(e)
+            print("errorELK")
+            print ("failure handling mechanisms - ticket, mail etc")
             sys.exit(1)
 
         # Generate docs
@@ -334,9 +315,7 @@ def main():
         all_indices.extend(indices)
 
         try:
-            #wait for cluster to be green if nothing else is set
-            if WAIT_FOR_GREEN:
-                es.cluster.health(wait_for_status='green', master_timeout='600s', timeout='600s')
+            es.cluster.health(wait_for_status='green', master_timeout='600s', timeout='600s')
         except Exception as e:
             print("Cluster timeout....")
             print("Cleaning up created indices.. "),
@@ -350,7 +329,7 @@ def main():
         print("Done!")
 
 
-    print("Starting the test. Will print stats every {0} seconds.".format(STATS_FREQUENCY))
+    print("Starting the test. Will print stats every {0} seconds.".format(30))
     print("The test would run for {0} seconds, but it might take a bit more "
           "because we are waiting for current bulk operation to complete. \n".format(NUMBER_OF_SECONDS))
 
@@ -391,13 +370,11 @@ def main():
     print("\nTest is done! Final results:")
     print_stats(STARTED_TIMESTAMP)
 
-    # Cleanup, unless we are told not to
-    if not NO_CLEANUP:
-        print("Cleaning up created indices.. "),
+    print("Cleaning up created indices.. "),
 
-        cleanup_indices(es, all_indices)
+    cleanup_indices(es, all_indices)
 
-        print("LOADTEST-DONE") #handler for Ansible assert statement
+    print("LOADTEST-DONE")
 
 try:
     main()
@@ -405,6 +382,6 @@ try:
 except Exception as e:
     print("")
     print(e.message)
-    print("error")
-    print("Ab-Task-Mail to systems informing tests failed")
+    print("errorELK")
+    print ("failure handling mechanisms - ticket, mail etc")
     sys.exit(1)
