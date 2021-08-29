@@ -1,1 +1,28 @@
+version: "3.3"
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.14.0
+    volumes:
+      - filebeat:/usr/share/filebeat/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers/:/var/lib/docker/containers/:ro
+      - /var/log/:/var/log/:ro
+      - /var/log/audit/:/var/log/audit/:ro
+    environment:
+      - ELASTICSEARCH_HOST=http://ab-elasticsearch:9200
+      - KIBANA_HOST=http://ab-kibana:5601
+    command: ["--strict.perms=false"]
+    deploy:
+      mode: global
 
+networks:
+  elastic:
+    external: true
+    name: host
+
+volumes:
+  filebeat:
+
+configs:
+  fb_config:
+    file: $PWD/elk/beats/filebeat/config/filebeat.yml
