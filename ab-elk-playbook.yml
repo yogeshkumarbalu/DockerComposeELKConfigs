@@ -6,6 +6,12 @@
   tasks:
   - name: block for ELK Stack and this block is rescued with mail notification
     block:
+    - name: run the integration tests written in python script (GET)
+      command: python3 ab-integration-tests.py
+      register: output
+      failed_when: '"errorELKIntegration" in output.stdout'
+      when: inventory_hostname == 'localhost'
+      
     - name: run the functional tests written in python script (PUT)
       command: python3 ab-func-tests.py
       register: output
