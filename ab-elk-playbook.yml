@@ -73,11 +73,21 @@
 
     - name: run filebeats in docker
       command: docker-compose -f ab-fb-docker-compose.yml up -d
-  
-    - name: run the functional tests written in python script
-      command: python3 ab-elk-func-tests.py  --es_address localhost --indices 4 --documents 5 --seconds 120 --clients 5
+
+    - name: run the integration tests written in python script (GET)
+      command: python3 ab-integration-tests.py
       register: output
-      failed_when: '"errorELK" in output.stdout'
+      failed_when: '"Airbus: Cool" not in output.stdout'
+
+    - name: run the functional tests written in python script (PUT)
+      command: python3 ab-func-tests.py
+      register: output
+      failed_when: '"SUCCESS" not in output.stdout'
+  
+    - name: run the load tests written in python script
+      command: python3 ab-load-tests.py  --es_address localhost --indices 4 --documents 5 --seconds 120 --clients 5
+      register: output
+      failed_when: '"LOADTEST-DONE" not in output.stdout'
 
     rescue:
     - name: when any of tasks fail, mail notification
