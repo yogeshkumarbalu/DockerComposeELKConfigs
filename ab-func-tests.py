@@ -6,8 +6,8 @@ es = Elasticsearch()
 
 def feed_index():
     try:
-        if(urllib.request.urlopen("http://172.31.7.38:5601/app/home#/").getcode() == 200 and 
-        urllib.request.urlopen("http://172.31.7.38:9200/").getcode() == 200):
+        if(urllib.request.urlopen("http://localhost:5601").getcode() == 200 and 
+        urllib.request.urlopen("http://localhost:9200/").getcode() == 200):
             doc = {
                 'author': 'yogesh',
                 'text': 'Am i being fed into index',
