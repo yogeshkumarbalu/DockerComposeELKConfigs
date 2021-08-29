@@ -1,5 +1,5 @@
 ---
-- name: run docker-compose on localhost
+- name: run docker-compose on all hosts in inventory file
   hosts: all
   become: yes
 
