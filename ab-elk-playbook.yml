@@ -52,7 +52,7 @@
     
     - name: add the ansible user to docker group to execure docker commands
       user:
-        name: '{{ ansible_user }}'
+        name: '{{ user }}'
         groups: docker
         append: yes
 
