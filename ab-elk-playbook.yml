@@ -79,6 +79,7 @@
     - name: Pause for 50 seconds for kibana to start
       pause:
         seconds: 59
+      when: inventory_hostname == 'localhost'
 
     - name: run the integration tests written in python script (GET)
       command: python3 ab-integration-tests.py
