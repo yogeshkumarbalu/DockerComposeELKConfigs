@@ -74,6 +74,10 @@
     - name: run filebeats in docker
       command: docker-compose -f ab-fb-docker-compose.yml up -d
 
+    - name: Pause for 5 minutes to build app cache
+      pause:
+        seconds: 59
+
     - name: run the integration tests written in python script (GET)
       command: python3 ab-integration-tests.py
       register: output
