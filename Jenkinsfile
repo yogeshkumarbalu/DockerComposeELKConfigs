@@ -1,6 +1,15 @@
 pipeline {
 	agent any
 	stages {
+		
+		
+		  stage('SonarQube Analysis') {
+			    def scannerHome = tool 'sonarqube';
+			    withSonarQubeEnv('sonarqube') {
+			      sh "${scannerHome}/bin/sonar-scanner"
+		}
+		
+		
 		stage("Copy docker compose file to ELK Docker server") {
 			steps {
 				sshPublisher(publishers: [sshPublisherDesc
