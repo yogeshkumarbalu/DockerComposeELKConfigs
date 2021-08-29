@@ -32,18 +32,6 @@ services:
         depends_on:
             - ab-elasticsearch
     
-    ab-filebeat:
-      container_name: ab-beats
-      image: docker.elastic.co/beats/filebeat:${ELASTIC_VERSION:-7.14.0}
-      restart: always
-      volumes:
-        - abes-filebeat:/usr/share/filebeat/data
-      environment:
-        - ELASTICSEARCH_HOST=http://ab-elasticsearch:9200
-        - KIBANA_HOST=http://ab-kibana:5601
-      command: ["--strict.perms=false"]
-      depends_on: 
-        - ab-elasticsearch
 
     ab-logstash:
         container_name: ab-logstash
