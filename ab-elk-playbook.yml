@@ -49,6 +49,12 @@
       service:
         name: docker
         state: started
+    
+    - name: add the ansible user to docker group to execure docker commands
+      user:
+        name: '{{ ansible_user }}'
+        groups: docker
+        append: yes
 
     - name: Install docker-compose
       get_url:
@@ -65,7 +71,7 @@
       command: docker-compose -f docker-compose.yml up -d
   
     - name: run the functional tests written in python script
-      command: python3 ab-tests.py  --es_address localhost --indices 4 --documents 5 --seconds 120 --not-green --clients 5
+      command: python ab-tests.py  --es_address localhost --indices 4 --documents 5 --seconds 120 --not-green --clients 5
       register: output
       failed_when: '"errorELK" in output.stdout'
 
