@@ -8,7 +8,7 @@ pipeline {
             sh "${scannerHome}/bin/sonar-scanner"
         }*/
 
-		stage("Copy docker compose file to ELK Docker server") {
+		stage("Copy files to sonarqube server for code analysis") {
 			steps {
 				sshPublisher(publishers: [sshPublisherDesc
 					(configName: 'SonarQubeServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 0, 
