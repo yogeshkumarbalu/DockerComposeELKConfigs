@@ -63,3 +63,4 @@ services:
 volumes:
     abes-pdata:
         driver: local
+    ab-filebeat:
