@@ -15,11 +15,6 @@ services:
     deploy:
       mode: global
 
-networks:
-  elastic:
-    external: true
-    name: host
-
 volumes:
   filebeat:
 
