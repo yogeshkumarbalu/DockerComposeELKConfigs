@@ -1,17 +1,20 @@
 from datetime import datetime
 from elasticsearch import Elasticsearch
+import urllib.request
 es = Elasticsearch()
 
 
 def feed_index():
     try:
-        doc = {
-            'author': 'yogesh',
-            'text': 'Am i being fed into index',
-            'timestamp': datetime.now(),
-        }
-        res = es.index(index="integration-test-index", id=2, body=doc)
-        print(res['result'] + "SUCCESS")
+        if(urllib.request.urlopen("http://3.67.42.37:5601/app/home#/").getcode() == 200 and 
+        urllib.request.urlopen("http://3.67.42.37:9200/").getcode() == 200):
+            doc = {
+                'author': 'yogesh',
+                'text': 'Am i being fed into index',
+                'timestamp': datetime.now(),
+                }
+            res = es.index(index="integration-test-index", id=2, body=doc)
+            print(res['result'] + "SUCCESS")
     
     except Exception as e:
         print("notify developer - mail or create tickets - etc" + str(e))
