@@ -1,6 +1,7 @@
 ---
 - name: run docker-compose on all hosts in inventory file
   hosts: all
+  serial: 1
   become: yes
 
   tasks:
