@@ -75,7 +75,7 @@
       command: docker-compose -f ab-fb-docker-compose.yml up -d
   
     - name: run the functional tests written in python script
-      command: python3 ab-elk-func-tests.py  --es_address localhost --indices 4 --documents 5 --seconds 120 --not-green --clients 5
+      command: python3 ab-elk-func-tests.py  --es_address localhost --indices 4 --documents 5 --seconds 120 --clients 5
       register: output
       failed_when: '"errorELK" in output.stdout'
 
