@@ -74,7 +74,7 @@
     - name: run filebeats in docker
       command: docker-compose -f ab-fb-docker-compose.yml up -d
 
-    - name: Pause for 5 minutes to build app cache
+    - name: Pause for 50 seconds for kibana to start
       pause:
         seconds: 59
 
