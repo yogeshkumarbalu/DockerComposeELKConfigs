@@ -22,7 +22,7 @@
       service:
         name: docker
         state: stopped
-      ignore_error: yes
+      ignore_errors: yes
 
     - name: remove the docker packages
       yum:
