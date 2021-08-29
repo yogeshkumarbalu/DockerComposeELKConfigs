@@ -31,23 +31,7 @@ services:
             - 5601:5601
         depends_on:
             - ab-elasticsearch
-    
-    ab-filebeat:
-      image: docker.elastic.co/beats/filebeat:7.14.0
-      container_name: ab-filebeat
-      volumes:
-        - filebeat:/usr/share/filebeat/data
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /var/lib/docker/containers/:/var/lib/docker/containers/:ro
-        - /var/log/:/var/log/:ro
-        - /var/log/audit/:/var/log/audit/:ro
-      environment:
-        - ELASTICSEARCH_HOSTS=http://ab-elasticsearch:9200
-        - KIBANA_HOST=http://ab-kibana:5601
-      command: ["--strict.perms=false"]
-      deploy:
-        mode: global
-
+ 
     ab-logstash:
         container_name: ab-logstash
         image: docker.elastic.co/logstash/logstash:7.7.0
@@ -63,4 +47,3 @@ services:
 volumes:
     abes-pdata:
         driver: local
-    ab-filebeat:
