@@ -19,7 +19,7 @@ pipeline {
 		}*/
 
 
-		stage("Copy docker compose file to ELK Docker server") {
+		/*stage("Copy docker compose file to ELK Docker server") {
 			steps {
 				sshPublisher(publishers: [sshPublisherDesc
 					(configName: 'ElkDockerHost', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '', execTimeout: 0, 
@@ -27,7 +27,7 @@ pipeline {
 						remoteDirectorySDF: false, removePrefix: '', sourceFiles: '*.yml, *.py')], 
 						usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
 			}
-		}
+		}*/
 		
 
 		stage("Copy the python test scripts and docker compose file to Ansible server and execute the playbook") {
