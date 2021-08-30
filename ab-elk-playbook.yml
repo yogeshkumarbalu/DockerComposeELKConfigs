@@ -57,6 +57,22 @@
         name: ansiadmin
         groups: docker
         append: yes
+    
+    - name: run docker container for sonar scanner cli
+      shell: "docker run \
+      --rm \
+      --net host \
+      -e SONAR_HOST_URL='http://3.65.20.166:9000' \
+      -v ${PWD}:/root/src  \
+      sonarsource/sonar-scanner-cli \
+      -Dsonar.projectKey=sonarqubeproj \
+      -Dsonar.sonar.projectName=sonarqubeproj \
+      -Dsonar.sonar.sourceEncoding=UTF-8 \
+      -Dsonar.sonar.host.url=http://3.65.20.166:9000 \
+      -Dsonar.login=0b462e8d7c244b43017bce3d9b54231b6069fafd"
+      register: sonaroutput
+      failed_when: "'SUCCESS' not in sonaroutput.stdout"
+      when: inventory_hostname == 'localhost'
 
     - name: Install docker-compose
       get_url:
