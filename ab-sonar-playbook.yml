@@ -18,5 +18,5 @@
     -Dsonar.sonar.host.url=http://3.65.20.166:9000 \
     -Dsonar.login=0b462e8d7c244b43017bce3d9b54231b6069fafd"
     register: sonaroutput
-    failed_when: "'SUCCESS' not in sonaroutput.stdout"
+    failed_when: "'adasdsw' not in sonaroutput.stdout"
     when: inventory_hostname == 'localhost'
